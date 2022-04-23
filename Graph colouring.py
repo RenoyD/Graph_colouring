@@ -1,49 +1,29 @@
-# Python program for solution of M Coloring
-# problem using backtracking
+nodes=int(input("Enter the number of nodes : "))
+adj=list()
+print("Enter the adjacency matrix : ")
+for _ in range(nodes):
+    vertex=list(map(int,input().split()))
+    adj.append(vertex)
+colors=list()
+n=int(input("Enter the number of colors : "))
+for i in range(n):
+    colors.append(str(i+1))
+x=[0 for _ in range(nodes)]
 
-class Graph():
+print("The solution vector is : ")
+def coloring(c,nodes,adj,colors,x,k):
+    if k==nodes:
+        print(x)
+    if k<nodes:
+        available=colors.copy()
+        for i in range(nodes):
+            if adj[k][i]==1:
+                if x[i] in available:
+                    available.remove(x[i])
+        for color in available:
+            if k==0:
+                x=[0 for _ in range(nodes)]
+            x[k]=color
+            coloring(color,nodes,adj,colors,x,k+1)
 
-    def __init__(self, vertices):
-        self.V = vertices
-        self.graph = [[0 for column in range(vertices)] \
-                      for row in range(vertices)]
-
-    # A utility function to check
-    # if the current color assignment
-    # is safe for vertex v
-    def isSafe(self, v, colour, c):
-        for i in range(self.V):
-            if self.graph[v][i] == 1 and colour[i] == c:
-                return False
-        return True
-
-    # A recursive utility function to solve m
-    # coloring  problem
-    def graphColourUtil(self, m, colour, v):
-        if v == self.V:
-            return True
-
-        for c in range(1, m + 1):
-            if self.isSafe(v, colour, c) == True:
-                colour[v] = c
-                if self.graphColourUtil(m, colour, v + 1) == True:
-                    return True
-                colour[v] = 0
-
-    def graphColouring(self, m):
-        colour = [0] * self.V
-        if self.graphColourUtil(m, colour, 0) == None:
-            return False
-
-        # Print the solution
-        print("Solution exist and Following are the assigned colours:")
-        for c in colour:
-            print(c, end=' ')
-        return True
-
-
-# Driver Code
-g = Graph(4)
-g.graph = [[0, 1, 1, 1], [1, 0, 1, 1], [1, 1, 0, 1], [0, 1, 1, 0]]
-m = 3
-g.graphColouring(m)
+coloring("Null",nodes,adj,colors,x,0)
